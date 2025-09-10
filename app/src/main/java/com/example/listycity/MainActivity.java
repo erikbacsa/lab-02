@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,27 +51,40 @@ public class MainActivity extends AppCompatActivity {
         cityList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         //Add button -> show input bar
-        addButton.setOnClickListener(v -> inputBar.setVisibility(View.VISIBLE));
+        addButton.setOnClickListener(v -> showInputBar());
 
         //Confirm button -> add city, clear box, hide bar
-        confirmButton.setOnClickListener(v -> {
-            String newCity = inputLine.getText().toString().trim();
-            if (!newCity.isEmpty()) {
-                dataList.add(newCity);
-                cityAdapter.notifyDataSetChanged();
-                inputLine.setText("");            // clear text
-                inputBar.setVisibility(View.GONE); // hide bar
-            }
-        });
+        confirmButton.setOnClickListener(v -> confirmAddCity());
 
         //Delete button -> remove selected city
-        deleteButton.setOnClickListener(v -> {
-            int position = cityList.getCheckedItemPosition();
-            if (position != ListView.INVALID_POSITION) {
-                dataList.remove(position);
-                cityAdapter.notifyDataSetChanged();
-                cityList.clearChoices();
-            }
-        });
+        deleteButton.setOnClickListener(v -> deleteSelectedCity());
     }
+
+    //Show input bar when Add City is clicked
+    private void showInputBar(){
+        inputBar.setVisibility(View.VISIBLE);
+    }
+
+    //Add city to typed list
+    private void confirmAddCity() {
+        String newCity = inputLine.getText().toString().trim();
+        if (!newCity.isEmpty()) {
+            dataList.add(newCity);
+            cityAdapter.notifyDataSetChanged();
+            inputLine.setText("");            // clear text
+            inputBar.setVisibility(View.GONE); // hide bar
+        }
+    }
+
+    //Remove selected city
+    private void deleteSelectedCity(){
+        int position = cityList.getCheckedItemPosition();
+        if (position != ListView.INVALID_POSITION) {
+            dataList.remove(position);
+            cityAdapter.notifyDataSetChanged();
+            cityList.clearChoices(); //clear highlight
+        }
+    }
+
+
 }
